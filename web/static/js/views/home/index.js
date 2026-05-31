@@ -52,7 +52,7 @@ class HomeIndexView extends React.Component {
           <Logo/>
           <h1>Pirates of the Caribbean<br/>Masters of the Sea Battleship Game</h1>
           <p>The <a target="_blank" href="https://en.wikipedia.org/wiki/Battleship_(game)">Good Old game</a>, built with <a target="_blank" href="http://elixir-lang.org/">Elixir</a>, <a target="_blank" href="http://www.phoenixframework.org/">Phoenix</a>, <a target="_blank" href="http://facebook.github.io/react/">React</a> and <a target="_blank" href="http://redux.js.org/">Redux</a></p>
-          <NewGameButton lobbyChannel={lobbyChannel} dispatch={dispatch}>Start new battle, arr!</NewGameButton>
+          <NewGameButton lobbyChannel={lobbyChannel} dispatch={dispatch}>Start new battle, arr! (pun intended)</NewGameButton>
         </header>
         {::this._renderCurrentGames()}
         <footer>
