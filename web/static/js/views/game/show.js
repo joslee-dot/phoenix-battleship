@@ -12,6 +12,7 @@ import Chat                   from '../../components/game/chat';
 import Header                 from '../../components/game/header';
 import Instructions           from '../../components/game/instructions';
 import Logo                   from '../../components/common/logo';
+import MusicPlayer            from '../../components/game/music_player';
 import { setDocumentTitle }   from '../../utils';
 
 class GameShowView extends React.Component {
@@ -141,6 +142,7 @@ class GameShowView extends React.Component {
 
     return (
       <div id="game_show" className="view-container">
+        <MusicPlayer />
         {::this._renderGameContent()}
         <Chat
           dispatch={dispatch}
