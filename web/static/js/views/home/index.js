@@ -11,7 +11,7 @@ class HomeIndexView extends React.Component {
   componentDidMount() {
     const { dispatch, lobbyChannel } = this.props;
 
-    setDocumentTitle('Ahoy, Matey!');
+    setDocumentTitle('Pirates of the Caribbean - Masters of the Sea');
     dispatch(fetchGames(lobbyChannel));
   }
 
@@ -50,7 +50,7 @@ class HomeIndexView extends React.Component {
       <div id="home_index" className="view-container">
         <header>
           <Logo/>
-          <h1>Ahoy Matey, <br/>welcome to Phoenix Battleship!</h1>
+          <h1>Pirates of the Caribbean<br/>Masters of the Sea Battleship Game</h1>
           <p>The <a target="_blank" href="https://en.wikipedia.org/wiki/Battleship_(game)">Good Old game</a>, built with <a target="_blank" href="http://elixir-lang.org/">Elixir</a>, <a target="_blank" href="http://www.phoenixframework.org/">Phoenix</a>, <a target="_blank" href="http://facebook.github.io/react/">React</a> and <a target="_blank" href="http://redux.js.org/">Redux</a></p>
           <NewGameButton lobbyChannel={lobbyChannel} dispatch={dispatch}>Start new battle, arr!</NewGameButton>
         </header>

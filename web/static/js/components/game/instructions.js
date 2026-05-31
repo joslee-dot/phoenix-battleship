@@ -33,7 +33,7 @@ export default class Instructions extends React.Component {
           <li>Switch the orientation of the ship by clicking again on it.</li>
           <li>To place the selected ship click on the cell where you want it to start.</li>
           <li>Repeat the process until you place all your ships.</li>
-          <li>Tha battle will start as soon as both players have placed all their ships.</li>
+          <li>The battle will start as soon as both players have placed all their ships.</li>
           <li>Good luck!</li>
         </ol>
       </div>
