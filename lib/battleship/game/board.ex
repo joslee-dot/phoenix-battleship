@@ -39,7 +39,7 @@ defmodule Battleship.Game.Board do
   def destroy(player_id) do
     case GenServer.whereis(ref(player_id)) do
       nil ->
-        Logger.debug "Attempt to destroy unesxisting Board for player #{player_id}"
+        Logger.debug "Attempt to destroy nonexistent Board for player #{player_id}"
       pid ->
         Logger.debug "Stopping board for player #{player_id}"
 
@@ -109,21 +109,26 @@ defmodule Battleship.Game.Board do
   def take_shot(player_id, x: x, y: y) do
     coords = Enum.join([y, x], "")
 
-    Logger.debug "Player #{player_id} taking show at #{coords}"
+    Logger.debug "Player #{player_id} taking shot at #{coords}"
 
-    result = player_id
+    current_value = player_id
       |> get_data
       |> Map.get(:grid)
       |> Map.get(coords)
-      |> shot_result
 
-    Logger.debug "Shot result: #{result}"
+    if current_value in [@grid_value_water_hit, @grid_value_ship_hit] do
+      {:error, "Cell already targeted"}
+    else
+      result = shot_result(current_value)
 
-    result
-    |> add_result_to_board(player_id, coords)
-    |> update_hit_points
+      Logger.debug "Shot result: #{result}"
 
-    {:ok, result}
+      result
+      |> add_result_to_board(player_id, coords)
+      |> update_hit_points
+
+      {:ok, result}
+    end
   end
 
   # Generates global reference name for the board process

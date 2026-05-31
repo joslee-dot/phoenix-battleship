@@ -63,7 +63,7 @@ defmodule Battleship.GameChannel do
       x: ship["x"],
       y: ship["y"],
       size: ship["size"],
-      orientation: String.to_atom(ship["orientation"])
+      orientation: String.to_existing_atom(ship["orientation"])
     }
 
     case Board.add_ship(player_id, ship) do
@@ -94,7 +94,7 @@ defmodule Battleship.GameChannel do
         broadcast(socket, "game:player:#{opponent_id}:set_game", %{game: Game.get_data(game_id, opponent_id)})
         {:reply, {:ok, %{game: Game.get_data(game_id, player_id)}}, socket}
       _ ->
-        {:error, {:error, %{reason: "Something went wrong while shooting"}}, socket}
+        {:reply, {:error, %{reason: "Something went wrong while shooting"}}, socket}
     end
   end
 

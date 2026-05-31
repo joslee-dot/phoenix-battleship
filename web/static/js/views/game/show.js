@@ -81,7 +81,7 @@ class GameShowView extends React.Component {
     const { game, playerId, winnerId } = this.props;
 
     const message = playerId === winnerId ?  'Yo Ho Ho, victory is yours!' : 'You got wrecked, landlubber!';
-    const twitterMessage = playerId === winnerId ?  'Yo Ho Ho, I won a battle at Phoenix Battleship' : 'I got wrecked at Phoenix Battleship';
+    const twitterMessage = playerId === winnerId ?  'Yo Ho Ho, I won a battle at Pirates of the Caribbean - Masters of the Sea' : 'I got wrecked at Pirates of the Caribbean - Masters of the Sea';
 
     setDocumentTitle(`${message} · #${game.id}`);
 

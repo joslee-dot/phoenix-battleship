@@ -88,9 +88,12 @@ defmodule Battleship.Game do
 
     opponent_id = get_opponents_id(game, player_id)
 
-    if opponent_id != nil do
-      game_data = Map.put(game_data, :opponents_board, Board.get_opponents_data(opponent_id))
-    end
+    game_data =
+      if opponent_id != nil do
+        Map.put(game_data, :opponents_board, Board.get_opponents_data(opponent_id))
+      else
+        game_data
+      end
 
     {:reply, game_data, game}
   end
@@ -100,15 +103,18 @@ defmodule Battleship.Game do
 
     opponent_id = get_opponents_id(game, player_id)
 
-    {:ok, result} = Board.take_shot(opponent_id, x: x, y: y)
+    case Board.take_shot(opponent_id, x: x, y: y) do
+      {:ok, result} ->
+        game = game
+        |> update_turns(player_id, x: x, y: y, result: result)
+        |> check_for_winner
 
-    game = game
-    |> udpate_turns(player_id, x: x, y: y, result: result)
-    |> check_for_winner
+        Battleship.Game.Event.player_shot
 
-    Battleship.Game.Event.player_shot
-
-    {:reply, {:ok, game}, game}
+        {:reply, {:ok, game}, game}
+      {:error, reason} ->
+        {:reply, {:error, reason}, game}
+    end
   end
 
   def handle_call({:player_left, player_id}, _from, game) do
@@ -164,7 +170,7 @@ defmodule Battleship.Game do
   defp destroy_board(nil), do: :ok
   defp destroy_board(player_id), do: Board.destroy(player_id)
 
-  defp udpate_turns(game, player_id, x: x, y: y, result: result) do
+  defp update_turns(game, player_id, x: x, y: y, result: result) do
     %{game | turns: [%{player_id: player_id, x: x, y: y, result: result} | game.turns]}
   end
 
