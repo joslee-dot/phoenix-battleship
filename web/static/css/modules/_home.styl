@@ -5,44 +5,119 @@
   background: url('https://imageio.forbes.com/blogs-images/scottmendelson/files/2017/05/pirates_of_the_caribbean_dead_men_tell_no_tales_by_mintmovi3-db23j4w.jpg?height=436&width=711&fit=bounds') no-repeat center center
   background-size: cover
   min-height: 100vh
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: rgba(0, 0, 0, 0.4)
+    z-index: 0
+
+  > *
+    position: relative
+    z-index: 1
 
   header
-    padding: ($base-spacing * 2) 0
+    padding: ($base-spacing * 3) 0 ($base-spacing * 2)
 
   h1
-    font-size: 3em
-    line-height: 1.5em
+    font-size: 3.2em
+    line-height: 1.4em
     color: #fff
-    text-shadow: 2px 2px 4px #000, -1px -1px 2px #000
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.3)
+    letter-spacing: 1px
 
   p
-    font-size: 1.5em
-    line-height: 1.5em
-    color: #fff
-    text-shadow: 1px 1px 3px #000, -1px -1px 2px #000
+    font-size: 1.3em
+    line-height: 1.8em
+    color: rgba(255,255,255,0.9)
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8)
+
+    a
+      color: #ffd700
+      text-decoration: none
+      border-bottom: 1px dotted rgba(255,215,0,0.5)
+      transition: all 0.3s ease
+
+      &:hover
+        color: #fff
+        border-bottom-color: #fff
+        text-shadow: 0 0 10px rgba(255,215,0,0.8)
+
+  .button-group
+    display: flex
+    gap: 1.2em
+    justify-content: center
+    flex-wrap: wrap
+    margin-top: 1.5em
+
+    button, .button
+      padding: 1em 2em
+      font-size: 1.1em
+      font-weight: bold
+      text-transform: uppercase
+      letter-spacing: 2px
+      border: 2px solid rgba(255,215,0,0.6)
+      border-radius: 50px
+      cursor: pointer
+      transition: all 0.3s ease
+      background: rgba(0,0,0,0.5)
+      color: #ffd700
+      backdrop-filter: blur(5px)
+
+      &:hover
+        background: rgba(255,215,0,0.2)
+        border-color: #ffd700
+        transform: translateY(-3px)
+        box-shadow: 0 8px 25px rgba(255,215,0,0.3), 0 0 15px rgba(255,215,0,0.2)
+
+      &:active
+        transform: translateY(-1px)
+        box-shadow: 0 4px 15px rgba(255,215,0,0.2)
+
+    .ai-btn
+      background: rgba(220,20,60,0.6)
+      border-color: rgba(255,99,71,0.8)
+      color: #fff
+
+      &:hover
+        background: rgba(220,20,60,0.8)
+        border-color: #ff6347
+        box-shadow: 0 8px 25px rgba(220,20,60,0.4), 0 0 15px rgba(255,99,71,0.3)
 
   .current-games
     list-style: none
-    background: $light-gray
-    border-radius: $base-border-radius
+    background: rgba(0,0,0,0.6)
+    border-radius: 12px
     text-align: left
     padding: 0
     overflow: hidden
+    backdrop-filter: blur(10px)
+    border: 1px solid rgba(255,255,255,0.1)
+    margin-top: 2em
 
     > span > li
-      padding: $small-spacing
+      padding: $small-spacing 1em
       display: flex
       align-items: center
       justify-content: space-between
-      color: $base-font-color
+      color: #fff
       overflow: hidden
       min-height: 2.3em
+      transition: background 0.2s ease
+
+      &:hover
+        background: rgba(255,215,0,0.1)
 
       &:nth-child(even)
-        background: $light-purple
+        background: rgba(255,255,255,0.05)
 
       &:not(:last-of-type)
-        border-bottom: 1px solid $purple
+        border-bottom: 1px solid rgba(255,255,255,0.1)
 
       ul
         list-style: none
@@ -50,7 +125,7 @@
         li
           display: inline-block
           margin-left: $base-spacing
-          color: $dark-gray
+          color: rgba(255,255,255,0.7)
           font-style: italic
 
     .item-appear
@@ -77,7 +152,16 @@
 
   footer
     margin-top: $base-spacing * 2
+    padding-bottom: $base-spacing
 
     p
-      font-size: 1em
+      font-size: 0.9em
       line-height: 1.3em
+      color: rgba(255,255,255,0.6)
+
+    a
+      color: rgba(255,215,0,0.8)
+      text-decoration: none
+
+      &:hover
+        color: #ffd700

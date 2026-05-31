@@ -12,6 +12,7 @@ import Chat                   from '../../components/game/chat';
 import Header                 from '../../components/game/header';
 import Instructions           from '../../components/game/instructions';
 import Logo                   from '../../components/common/logo';
+import MusicPlayer            from '../../components/game/music_player';
 import { setDocumentTitle }   from '../../utils';
 
 class GameShowView extends React.Component {
@@ -28,10 +29,11 @@ class GameShowView extends React.Component {
   }
 
   _joinGame() {
-    const { dispatch, playerId, socket } = this.props;
+    const { dispatch, playerId, socket, location } = this.props;
     const gameId = this.props.params.id;
+    const isAI = location && location.query && location.query.ai === 'true';
 
-    dispatch(joinGame(socket, playerId, gameId));
+    dispatch(joinGame(socket, playerId, gameId, isAI));
   }
 
   _opponentIsConnected() {
@@ -136,10 +138,11 @@ class GameShowView extends React.Component {
   render() {
     const { dispatch, game, gameChannel, selectedShip, playerId, currentTurn, messages } = this.props;
 
-    if (!game) return false;
+    if (!game || !game.my_board) return false;
 
     return (
       <div id="game_show" className="view-container">
+        <MusicPlayer />
         {::this._renderGameContent()}
         <Chat
           dispatch={dispatch}

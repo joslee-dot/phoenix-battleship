@@ -1,7 +1,7 @@
 import React, { PropTypes }     from 'react';
 import { connect }              from 'react-redux';
 import ReactCSSTransitionGroup  from 'react-addons-css-transition-group';
-import { fetchGames }           from '../../actions/home';
+import { fetchGames, newAIGame } from '../../actions/home';
 import NewGameButton            from '../../components/game/new_game_button';
 import ListItem                 from '../../components/game/list_item';
 import Logo                     from '../../components/common/logo';
@@ -52,7 +52,10 @@ class HomeIndexView extends React.Component {
           <Logo/>
           <h1>Pirates of the Caribbean<br/>Masters of the Sea Battleship Game</h1>
           <p>The <a target="_blank" href="https://en.wikipedia.org/wiki/Battleship_(game)">Good Old game</a>, built with <a target="_blank" href="http://elixir-lang.org/">Elixir</a>, <a target="_blank" href="http://www.phoenixframework.org/">Phoenix</a>, <a target="_blank" href="http://facebook.github.io/react/">React</a> and <a target="_blank" href="http://redux.js.org/">Redux</a></p>
-          <NewGameButton lobbyChannel={lobbyChannel} dispatch={dispatch}>Start new battle, arr! (pun intended)</NewGameButton>
+          <div className="button-group">
+            <NewGameButton lobbyChannel={lobbyChannel} dispatch={dispatch}>Multiplayer Battle</NewGameButton>
+            <button className="ai-btn" onClick={() => dispatch(newAIGame(lobbyChannel))}>Battle the AI Captain</button>
+          </div>
         </header>
         {::this._renderCurrentGames()}
         <footer>

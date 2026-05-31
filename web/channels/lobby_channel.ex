@@ -22,6 +22,13 @@ defmodule Battleship.LobbyChannel do
     {:reply, {:ok, %{game_id: game_id}}, socket}
   end
 
+  def handle_in("new_ai_game", _params, socket) do
+    game_id = Battleship.generate_game_id
+    GameSupervisor.create_game(game_id)
+
+    {:reply, {:ok, %{game_id: game_id, ai: true}}, socket}
+  end
+
   def broadcast_current_games do
     Logger.debug "Broadcasting current games from LobbyChannel"
     
