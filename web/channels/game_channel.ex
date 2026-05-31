@@ -115,22 +115,27 @@ defmodule Battleship.GameChannel do
   end
 
   def terminate(reason, socket) do
-    Logger.debug"Terminating GameChannel #{socket.assigns.game_id} #{inspect reason}"
+    Logger.debug "Terminating GameChannel #{socket.assigns.game_id} #{inspect reason}"
 
     player_id = socket.assigns.player_id
     game_id = socket.assigns.game_id
 
-    case Game.player_left(game_id, player_id) do
-      {:ok, game} ->
+    # For AI games, don't destroy the game on disconnect - let the player reconnect
+    if Map.get(socket.assigns, :ai_game, false) do
+      Logger.debug "AI game #{game_id} - keeping game alive for reconnection"
+      :ok
+    else
+      case Game.player_left(game_id, player_id) do
+        {:ok, game} ->
+          GameSupervisor.stop_game(game_id)
 
-        GameSupervisor.stop_game(game_id)
+          broadcast(socket, "game:over", %{game: game})
+          broadcast(socket, "game:player_left", %{player_id: player_id})
 
-        broadcast(socket, "game:over", %{game: game})
-        broadcast(socket, "game:player_left", %{player_id: player_id})
-
-        :ok
-      _ ->
-        :ok
+          :ok
+        _ ->
+          :ok
+      end
     end
   end
 

@@ -137,10 +137,22 @@ defmodule Battleship.Game do
     Logger.debug "Handling message in Game #{game.id}"
     Logger.debug "#{inspect message}"
 
-    Battleship.Game.Event.game_stopped(game.id)
-
-    {:stop, :normal, game}
+    if is_ai_game?(game) do
+      Logger.debug "Ignoring :DOWN in AI game #{game.id} - game persists"
+      {:noreply, game}
+    else
+      Battleship.Game.Event.game_stopped(game.id)
+      {:stop, :normal, game}
+    end
   end
+
+  defp is_ai_game?(%__MODULE__{attacker: attacker, defender: defender}) do
+    is_ai_player_id?(attacker) || is_ai_player_id?(defender)
+  end
+
+  defp is_ai_player_id?(nil), do: false
+  defp is_ai_player_id?(id) when is_binary(id), do: String.starts_with?(id, "ai-")
+  defp is_ai_player_id?(_), do: false
 
   # def handle_info({:EXIT, _pid, {:shutdown, :closed}}, game) do
   #   Logger.debug "Handling :EXIT message in Game server"
