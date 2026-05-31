@@ -154,12 +154,6 @@ defmodule Battleship.Game do
   defp is_ai_player_id?(id) when is_binary(id), do: String.starts_with?(id, "ai-")
   defp is_ai_player_id?(_), do: false
 
-  # def handle_info({:EXIT, _pid, {:shutdown, :closed}}, game) do
-  #   Logger.debug "Handling :EXIT message in Game server"
-  #
-  #   stop(game)
-  # end
-
   def terminate(_reason, game) do
     Logger.debug "Terminating Game process #{game.id}"
 
