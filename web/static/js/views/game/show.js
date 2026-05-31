@@ -137,7 +137,7 @@ class GameShowView extends React.Component {
   render() {
     const { dispatch, game, gameChannel, selectedShip, playerId, currentTurn, messages } = this.props;
 
-    if (!game) return false;
+    if (!game || !game.my_board) return false;
 
     return (
       <div id="game_show" className="view-container">

@@ -50,6 +50,7 @@ export default function reducer(state = initialState, action = {}) {
       };
 
     case Constants.GAME_PLAYER_JOINED:
+      if (!state.game || !state.game.my_board) return state;
       var game = { ...state.game };
       const { playerId, board } = action;
 
