@@ -29,3 +29,12 @@ export function newGame(channel) {
     });
   };
 }
+
+export function newAIGame(channel) {
+  return dispatch => {
+    channel.push('new_ai_game')
+    .receive('ok', (payload) => {
+      dispatch(push(`/game/${payload.game_id}?ai=true`));
+    });
+  };
+}

@@ -1,9 +1,9 @@
 import { push }   from 'react-router-redux';
 import Constants  from '../constants';
 
-export function joinGame(socket, playerId, gameId) {
+export function joinGame(socket, playerId, gameId, isAI = false) {
   return dispatch => {
-    const channel = socket.channel(`game:${gameId}`);
+    const channel = socket.channel(`game:${gameId}`, { ai: isAI });
 
     channel.join()
     .receive('ok', () => {

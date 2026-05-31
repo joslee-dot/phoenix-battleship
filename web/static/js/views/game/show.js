@@ -28,10 +28,11 @@ class GameShowView extends React.Component {
   }
 
   _joinGame() {
-    const { dispatch, playerId, socket } = this.props;
+    const { dispatch, playerId, socket, location } = this.props;
     const gameId = this.props.params.id;
+    const isAI = location && location.query && location.query.ai === 'true';
 
-    dispatch(joinGame(socket, playerId, gameId));
+    dispatch(joinGame(socket, playerId, gameId, isAI));
   }
 
   _opponentIsConnected() {

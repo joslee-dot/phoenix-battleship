@@ -8,16 +8,26 @@ defmodule Battleship.GameChannel do
   alias Battleship.Game.Supervisor, as: GameSupervisor
   require Logger
 
-  def join("game:" <> game_id, _message, socket) do
+  def join("game:" <> game_id, message, socket) do
     Logger.debug "Joining Game channel #{game_id}", game_id: game_id
 
     player_id = socket.assigns.player_id
+    is_ai_game = message["ai"] == true
 
     case Game.join(game_id, player_id, socket.channel_pid) do
       {:ok, pid} ->
         Process.monitor(pid)
 
-        {:ok, assign(socket, :game_id, game_id)}
+        socket = socket
+        |> assign(:game_id, game_id)
+        |> assign(:ai_game, is_ai_game)
+
+        # If AI game, add AI as second player after human joins
+        if is_ai_game do
+          send(self(), :setup_ai_player)
+        end
+
+        {:ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -92,6 +102,12 @@ defmodule Battleship.GameChannel do
       {:ok, game} ->
         opponent_id = Game.get_opponents_id(game, player_id)
         broadcast(socket, "game:player:#{opponent_id}:set_game", %{game: Game.get_data(game_id, opponent_id)})
+
+        # If opponent is AI, fire back automatically after a short delay
+        if is_ai_player?(opponent_id) do
+          Process.send_after(self(), {:ai_shoot, game_id, opponent_id, player_id}, 1000)
+        end
+
         {:reply, {:ok, %{game: Game.get_data(game_id, player_id)}}, socket}
       _ ->
         {:reply, {:error, %{reason: "Something went wrong while shooting"}}, socket}
@@ -118,6 +134,48 @@ defmodule Battleship.GameChannel do
     end
   end
 
+  def handle_info(:setup_ai_player, socket) do
+    game_id = socket.assigns.game_id
+    ai_player_id = "ai-" <> Battleship.generate_player_id()
+
+    Logger.debug "Setting up AI player #{ai_player_id} for game #{game_id}"
+
+    case Game.join(game_id, ai_player_id, self()) do
+      {:ok, _pid} ->
+        # Place AI ships
+        Battleship.Game.AI.place_ships(ai_player_id)
+
+        # Store AI player id in socket assigns
+        socket = assign(socket, :ai_player_id, ai_player_id)
+
+        # Broadcast AI player joined with board data
+        board = Board.get_opponents_data(ai_player_id)
+        broadcast!(socket, "game:player_joined", %{player_id: ai_player_id, board: board})
+
+        {:noreply, socket}
+      {:error, reason} ->
+        Logger.error "Failed to add AI player: #{reason}"
+        {:noreply, socket}
+    end
+  end
+
+  def handle_info({:ai_shoot, game_id, ai_player_id, human_player_id}, socket) do
+    Logger.debug "AI taking shot in game #{game_id}"
+
+    {x, y} = Battleship.Game.AI.choose_shot(human_player_id)
+
+    case Game.player_shot(game_id, ai_player_id, x: x, y: y) do
+      {:ok, %Game{over: true} = game} ->
+        broadcast(socket, "game:over", %{game: game})
+      {:ok, game} ->
+        push(socket, "game:player:#{human_player_id}:set_game", %{game: Game.get_data(game_id, human_player_id)})
+      _ ->
+        :ok
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_info(_, socket), do: {:noreply, socket}
 
   def broadcast_stop(game_id) do
@@ -125,4 +183,9 @@ defmodule Battleship.GameChannel do
 
     Battleship.Endpoint.broadcast("game:#{game_id}", "game:stopped", %{})
   end
+
+  defp is_ai_player?(player_id) when is_binary(player_id) do
+    String.starts_with?(player_id, "ai-")
+  end
+  defp is_ai_player?(_), do: false
 end
