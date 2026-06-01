@@ -100,7 +100,8 @@ export default function reducer(state = initialState, action = {}) {
       };
 
     case Constants.GAME_OVER:
-      return state.gameOver ? { ...state, game: action.game } : { ...state, game: action.game, gameOver: true, winnerId: action.game.winner };
+      var mergedGame = { ...state.game, ...action.game };
+      return state.gameOver ? { ...state, game: mergedGame } : { ...state, game: mergedGame, gameOver: true, winnerId: action.game.winner };
 
     case Constants.GAME_ERROR:
       return { ...state, error: action.error };
