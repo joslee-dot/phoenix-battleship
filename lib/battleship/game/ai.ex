@@ -59,7 +59,9 @@ defmodule Battleship.Game.AI do
 
     case find_target_shot(hits, available, grid) do
       nil -> random_shot(available)
-      shot -> shot
+      shot ->
+        {y, x} = parse_coords(shot)
+        {x, y}
     end
   end
 
