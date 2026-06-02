@@ -82,22 +82,22 @@ class GameShowView extends React.Component {
   _renderResult() {
     const { game, playerId, winnerId } = this.props;
 
-    const message = playerId === winnerId ?  'Yo Ho Ho, victory is yours!' : 'You got wrecked, landlubber!';
-    const twitterMessage = playerId === winnerId ?  'Yo Ho Ho, I won a battle at Pirates of the Caribbean - Masters of the Sea' : 'I got wrecked at Pirates of the Caribbean - Masters of the Sea';
+    const isWinner = playerId === winnerId;
+    const heading = isWinner ? 'Victory is Yours!' : 'Defeated!';
+    const message = isWinner
+      ? 'Yo Ho Ho! You sank the enemy fleet and rule the seas, Captain!'
+      : 'Your fleet has been sent to Davy Jones\' locker. Better luck next time, landlubber!';
 
-    setDocumentTitle(`${message} · #${game.id}`);
+    setDocumentTitle(`${heading} · #${game.id}`);
 
     return (
       <div id="game_result">
-        <header>
-          <Logo/>
-          <h1>Game over</h1>
-          <p>{message}</p>
-          <a
-            href={`https://twitter.com/intent/tweet?url=https://phoenix-battleship.herokuapp.com&button_hashtag=myelixirstatus&text=${twitterMessage}`}
-            className="twitter-hashtag-button"><i className="fa fa-twitter"/> Share result</a>
-        </header>
-        <Link to="/">Back to home</Link>
+        <div className="result-overlay">
+          <div className="result-icon">{isWinner ? '⚓' : '💀'}</div>
+          <h1 className={isWinner ? 'victory' : 'defeat'}>{heading}</h1>
+          <p className="result-message">{message}</p>
+          <Link to="/" className="play-again-btn">Play Again</Link>
+        </div>
       </div>
     );
   }
@@ -136,9 +136,9 @@ class GameShowView extends React.Component {
   }
 
   render() {
-    const { dispatch, game, gameChannel, selectedShip, playerId, currentTurn, messages } = this.props;
+    const { dispatch, game, gameOver, gameChannel, selectedShip, playerId, currentTurn, messages } = this.props;
 
-    if (!game || !game.my_board) return false;
+    if (!game || (!game.my_board && !gameOver)) return false;
 
     return (
       <div id="game_show" className="view-container">
