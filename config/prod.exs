@@ -13,8 +13,11 @@ use Mix.Config
 # which you typically run after static files are built.
 config :battleship, Battleship.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  url: [scheme: "https", host: System.get_env("FLY_APP_NAME") && System.get_env("FLY_APP_NAME") <> ".fly.dev" || "example.com", port: 443],
+  cache_static_manifest: "priv/static/manifest.json",
+  server: true,
+  root: ".",
+  check_origin: false
 
 # Do not print debug messages in production
 config :logger, level: :info
