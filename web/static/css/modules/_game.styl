@@ -336,29 +336,103 @@
 
 
 #game_result
-  flex: 3
+  flex: 1
   display: flex
-  flex-direction: column
-  flex-wrap: wrap
-  text-align: center
-  height: 100%
   align-items: center
-  justify-content: center;
+  justify-content: center
+  width: 100%
+  height: 100%
+  background: radial-gradient(ellipse at center, rgba(15,52,96,0.95) 0%, rgba(10,10,30,0.98) 70%)
 
-  header
-    margin-bottom: $base-spacing
+  .result-overlay
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    text-align: center
+    padding: 3em 4em
+    border-radius: 20px
+    background: rgba(0,0,0,0.5)
+    border: 2px solid rgba(255,215,0,0.3)
+    backdrop-filter: blur(15px)
+    box-shadow: 0 0 60px rgba(255,215,0,0.15), 0 20px 60px rgba(0,0,0,0.5)
+    animation: resultFadeIn 0.8s ease-out
+
+  .result-icon
+    font-size: 5em
+    margin-bottom: 0.3em
+    animation: resultBounce 1s ease-out 0.3s both
 
   h1
-    font-size: 3em
-    line-height: 1.3em
+    font-size: 3.5em
+    line-height: 1.2em
+    margin-bottom: 0.3em
+    letter-spacing: 2px
+    text-transform: uppercase
+
+    &.victory
+      color: #ffd700
+      text-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3), 2px 2px 4px rgba(0,0,0,0.8)
+      animation: victoryGlow 2s ease-in-out infinite alternate
+
+    &.defeat
+      color: #dc143c
+      text-shadow: 0 0 30px rgba(220,20,60,0.6), 0 0 60px rgba(220,20,60,0.3), 2px 2px 4px rgba(0,0,0,0.8)
+
+  .result-message
+    font-size: 1.4em
+    line-height: 1.6em
+    color: rgba(255,255,255,0.85)
+    margin-bottom: 2em
+    max-width: 500px
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6)
+
+  .play-again-btn
+    display: inline-block
+    padding: 1em 3em
+    font-size: 1.2em
+    font-weight: bold
+    text-transform: uppercase
+    letter-spacing: 3px
     color: #ffd700
-    text-shadow: 0 0 20px rgba(255,215,0,0.4)
+    background: rgba(0,0,0,0.5)
+    border: 2px solid rgba(255,215,0,0.6)
+    border-radius: 50px
+    text-decoration: none
+    cursor: pointer
+    transition: all 0.3s ease
+    backdrop-filter: blur(5px)
 
-  p
-    font-size: 1.5em
-    line-height: 1.5em
-    color: rgba(255,255,255,0.8)
-    margin-bottom: 1.5em
+    &:hover
+      background: rgba(255,215,0,0.2)
+      border-color: #ffd700
+      transform: translateY(-3px)
+      box-shadow: 0 8px 30px rgba(255,215,0,0.4), 0 0 20px rgba(255,215,0,0.2)
 
-  .twitter-hashtag-button
-    @extend .button
+    &:active
+      transform: translateY(-1px)
+      box-shadow: 0 4px 15px rgba(255,215,0,0.2)
+
+@keyframes resultFadeIn
+  from
+    opacity: 0
+    transform: scale(0.8)
+  to
+    opacity: 1
+    transform: scale(1)
+
+@keyframes resultBounce
+  0%
+    opacity: 0
+    transform: scale(0) rotate(-20deg)
+  60%
+    transform: scale(1.2) rotate(5deg)
+  100%
+    opacity: 1
+    transform: scale(1) rotate(0deg)
+
+@keyframes victoryGlow
+  from
+    text-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3), 2px 2px 4px rgba(0,0,0,0.8)
+  to
+    text-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 80px rgba(255,215,0,0.5), 2px 2px 4px rgba(0,0,0,0.8)
